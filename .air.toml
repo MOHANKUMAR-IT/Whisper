@@ -1,0 +1,10 @@
+# .air.toml
+[build]
+bin = "tmp"         # Path for the compiled binary
+cmd = "go run cmd/main.go"  # Command to start the server
+include_dir = ["cmd", "internal"]  # Watch these directories for changes
+exclude_dir = ["tmp", "vendor"]  # Ignore these directories
+
+[watch]
+dirs = ["public"]  # Watch the public directory for static file changes
+extensions = ["go", "html", "css", "js"]  # Watch Go and static files
