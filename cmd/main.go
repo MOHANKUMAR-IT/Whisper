@@ -1,8 +1,8 @@
 package main
 
 import (
-	"P2PFileShare/internal/signaling"
-	"P2PFileShare/internal/web"
+	"github.com/MOHANKUMAR-IT/Whisper/internal/signaling"
+	"github.com/MOHANKUMAR-IT/Whisper/internal/web"
 	"github.com/gin-gonic/gin"
 	"log"
 )
