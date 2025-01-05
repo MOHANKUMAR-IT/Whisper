@@ -1,6 +1,6 @@
 // config.js
 export const CONFIG = {
-    signalingUrl: `ws://${getServerAddress()}:8080/ws`,
+    signalingUrl: `wss://${getServerAddress()}:8080/ws`,
     iceServers: [
         { urls: 'stun:stun.l.google.com:19302' }
     ]

@@ -15,7 +15,7 @@ func main() {
 	web.Register(router)
 
 	log.Println("Server is running on http://localhost:8080")
-	if err := router.Run(":8080"); err != nil {
+	if err := router.RunTLS(":8080", ".\\certs\\server.crt", ".\\certs\\server.key"); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
