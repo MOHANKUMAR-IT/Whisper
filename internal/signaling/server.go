@@ -75,8 +75,7 @@ func (s *Server) handleWebSocket(c *gin.Context) {
 	}
 	s.PeerMutex.RUnlock()
 
-	// Configure WebSocket
-	conn.SetReadLimit(4096) // Prevent memory exhaustion
+	conn.SetReadLimit(4096)
 	conn.SetReadDeadline(time.Now().Add(60 * time.Second))
 	conn.SetPongHandler(func(string) error {
 		conn.SetReadDeadline(time.Now().Add(60 * time.Second))
@@ -91,7 +90,6 @@ func (s *Server) handleWebSocket(c *gin.Context) {
 	s.registerPeer(peer)
 	defer s.unregisterPeer(peerID)
 
-	// Start ping-pong
 	go s.keepAlive(peer)
 
 	s.broadcastPeerList(peer)
@@ -184,7 +182,7 @@ func (s *Server) handleMessages(peer *Peer) {
 			} else {
 				log.Printf("Error reading message from peer %s: %v", peer.ID, err)
 			}
-			continue
+			break
 		}
 
 		if msg.Target == "" {

@@ -4,6 +4,7 @@ import {CONFIG} from "./config.js";
 export class SignalingChannel {
     constructor(localPeerID, onMessage) {
         this.localPeerID = localPeerID;
+        console.log("Using Websocket URL : ",`${CONFIG.signalingUrl}?id=${localPeerID}`);
         this.socket = new WebSocket(`${CONFIG.signalingUrl}?id=${localPeerID}`);
         this.socket.onmessage = onMessage;
         this.socket.onopen = () => console.log('[WebSocket] Connected to signaling server');

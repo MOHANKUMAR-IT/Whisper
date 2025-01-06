@@ -1,6 +1,9 @@
 // config.js
+
+const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+
 export const CONFIG = {
-    signalingUrl: `wss://${getServerAddress()}:8080/ws`,
+    signalingUrl: `${protocol}${getServerAddress()}/ws`,
     iceServers: [
         { urls: 'stun:stun.l.google.com:19302' }
     ]
