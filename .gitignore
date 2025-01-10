@@ -1,3 +1,4 @@
 ./tmp
 cmd.exe
 Whisper.exe
+.env

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Whisper</title>
+  <style>
+    :root {
+      --primary: #2B7A78;
+      --secondary: #3AAFA9;
+      --accent: #DEF2F1;
+      --background: #17252A;
+      --text: #FEFFFF;
+      --gradient: linear-gradient(135deg, #2B7A78, #3AAFA9, #DEF2F1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .left-section {
+      padding: 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+      background: rgba(23, 37, 42, 0.8);
+      backdrop-filter: blur(10px);
+    }
+
+    .right-section {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand {
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: slideIn 1s ease forwards;
+    }
+
+    .brand-name {
+      font-size: clamp(3.5rem, 6vw, 5rem);
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .tagline {
+      font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+      color: var(--secondary);
+      font-weight: 500;
+    }
+
+    .features {
+      margin: 3rem 0;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      opacity: 0;
+      animation: slideIn 1s ease forwards 0.3s;
+    }
+
+    .feature-card {
+      background: rgba(43, 122, 120, 0.1);
+      padding: 1.5rem;
+      border-radius: 16px;
+      border: 1px solid rgba(222, 242, 241, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--secondary);
+      background: rgba(43, 122, 120, 0.2);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--secondary);
+    }
+
+    .feature-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--accent);
+    }
+
+    .feature-text {
+      font-size: 0.9rem;
+      color: rgba(254, 255, 255, 0.8);
+    }
+
+    .cta-group {
+      opacity: 0;
+      animation: slideIn 1s ease forwards 0.6s;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+    }
+
+    .cta-primary {
+      background: var(--gradient);
+      color: var(--background);
+      box-shadow: 0 4px 15px rgba(58, 175, 169, 0.2);
+    }
+
+    .cta-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(58, 175, 169, 0.3);
+    }
+
+    #vanta-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      .left-section {
+        padding: 2rem;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="vanta-bg"></div>
+<main class="container">
+  <section class="left-section">
+    <div class="brand">
+      <h1 class="brand-name">WHISPER</h1>
+      <p class="tagline">Privacy in harmony with nature</p>
+    </div>
+
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">🕊️</div>
+        <h3 class="feature-title">Free as a Bird</h3>
+        <p class="feature-text">Unrestricted, secure communication</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🪶</div>
+        <h3 class="feature-title">Light as a Feather</h3>
+        <p class="feature-text">Swift, effortless messaging</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌿</div>
+        <h3 class="feature-title">Natural Privacy</h3>
+        <p class="feature-text">Organic protection of your conversations</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🍃</div>
+        <h3 class="feature-title">Gentle Impact</h3>
+        <p class="feature-text">Environmentally conscious security</p>
+      </div>
+    </div>
+
+    <div class="cta-group">
+      <a href="/login" class="cta cta-primary">Take Flight</a>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js"></script>
+<script>
+  VANTA.BIRDS({
+    el: "#vanta-bg",
+    mouseControls: true,
+    touchControls: true,
+    gyroControls: false,
+    minHeight: 200.00,
+    minWidth: 200.00,
+    scale: 1.00,
+    scaleMobile: 1.00,
+    backgroundColor: 0x17252A,
+    color1: 0x3AAFA9,
+    color2: 0xDEF2F1,
+    colorMode: "variance",
+    birdSize: 1.50,
+    wingSpan: 25.00,
+    speedLimit: 5.00,
+    separation: 30.00,
+    alignment: 50.00,
+    cohesion: 40.00,
+    quantity: 3.00
+  });
+</script>
+</body>
+</html>

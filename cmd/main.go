@@ -2,24 +2,29 @@ package main
 
 import (
 	_ "embed"
-	"github.com/MOHANKUMAR-IT/Whisper/internal/signaling"
-	"github.com/MOHANKUMAR-IT/Whisper/internal/web"
-	"github.com/gin-gonic/gin"
+	"github.com/MOHANKUMAR-IT/Whisper/web/platform/authenticator"
+	"github.com/MOHANKUMAR-IT/Whisper/web/platform/router"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 )
 
 func main() {
 
-	router := gin.Default()
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("Failed to load the env vars: %v", err)
+	}
 
-	signaling.Register(router)
+	auth, err := authenticator.New()
+	if err != nil {
+		log.Fatalf("Failed to initialize the authenticator: %v", err)
+	}
 
-	web.Register(router)
+	rtr := router.New(auth)
 
 	server := &http.Server{
 		Addr:    ":80",
-		Handler: router,
+		Handler: rtr,
 	}
 
 	log.Println("Starting Gin server on https://localhost:80")
