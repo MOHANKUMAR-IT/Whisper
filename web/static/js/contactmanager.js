@@ -1,4 +1,4 @@
-export class ContactManager {
+export class Contactmanager {
     constructor(localPeerId) {
         this.contacts = new Map();
         this.localPeerId = localPeerId;

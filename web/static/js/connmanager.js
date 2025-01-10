@@ -1,4 +1,4 @@
-import { PeerConnection } from './peerconnection.js';
+import { Peerconnection } from './peerconnection.js';
 
 export class ConnectionManager {
     constructor() {
@@ -10,7 +10,7 @@ export class ConnectionManager {
     getConnection(peerId, signalingChannel, onReceivedMessage) {
         let connection = this.connections.get(peerId);
         if (!connection && signalingChannel && onReceivedMessage) {
-            connection = new PeerConnection(true, signalingChannel, peerId, onReceivedMessage);
+            connection = new Peerconnection(true, signalingChannel, peerId, onReceivedMessage);
             this.connections.set(peerId, connection);
         }
         return connection;

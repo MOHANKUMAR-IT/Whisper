@@ -1,12 +1,12 @@
 import { SignalingChannel } from './signaling.js';
-import { ContactManager } from './contactManager.js';
+import { Contactmanager } from './contactmanager.js';
 import { ConnectionManager } from './connmanager.js'; // Import the new ConnectionManager
 
 export class ChatApp {
     constructor(nickname) {
         this.signalingChannel = null;
         this.connectionManager = new ConnectionManager();
-        this.contactManager = new ContactManager(nickname);
+        this.contactManager = new Contactmanager(nickname);
         this.nickname = nickname;
         this.handleReceivedMessage = this.handleReceivedMessage.bind(this);
         this.currentPeerId = null;

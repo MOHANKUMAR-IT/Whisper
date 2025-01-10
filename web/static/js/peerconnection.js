@@ -1,6 +1,6 @@
 import {CONFIG} from "./config.js";
 
-export class PeerConnection {
+export class Peerconnection {
     constructor(isInitiator, signalingChannel, targetPeerId, onmessage) {
         this.pc = new RTCPeerConnection({
             iceServers: CONFIG.iceServers
