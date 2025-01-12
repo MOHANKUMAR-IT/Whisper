@@ -4,7 +4,7 @@ import {CONFIG} from "./config.js";
 export class SignalingChannel {
     constructor(localPeerID, onMessage) {
         this.localPeerID = localPeerID;
-        const wsUrl = `${CONFIG.signalingUrl}?id=${localPeerID}`;
+        const wsUrl = `${CONFIG.signalingUrl}?id=${this.localPeerID}`;
 
         this.socket = new WebSocket(wsUrl);
         this.socket.onmessage = onMessage;
