@@ -11,6 +11,12 @@ import (
 func Handler(ctx *gin.Context) {
 	session := sessions.Default(ctx)
 	profile := session.Get("profile")
-
-	ctx.HTML(http.StatusOK, "chat.html", profile)
+	subject := session.Get("subject")
+	ctx.HTML(http.StatusOK, "chat.html", struct {
+		Profile interface{}
+		Subject interface{}
+	}{
+		Profile: profile,
+		Subject: subject,
+	})
 }

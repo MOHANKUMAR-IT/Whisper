@@ -20,7 +20,7 @@ import (
 
 // New registers the routes and returns the router.
 func New(auth *authenticator.Authenticator) *gin.Engine {
-	router := gin.Default()
+	router := gin.New()
 
 	// To store custom types in our cookies,
 	// we must first register them using gob.Register
@@ -32,13 +32,16 @@ func New(auth *authenticator.Authenticator) *gin.Engine {
 	staticDir := filepath.Join("web", "static")
 
 	router.Static("/static", staticDir)
-	router.LoadHTMLGlob("web/template/*")
+	router.LoadHTMLGlob("web/static/template/*")
 
 	router.GET("/", home.Handler)
 	router.GET("/login", login.Handler(auth))
 	router.GET("/callback", callback.Handler(auth))
 	router.GET("/chat", middleware.IsAuthenticated, chat.Handler)
 	router.GET("/logout", logout.Handler)
+	router.GET("/test", func(ctx *gin.Context) {
+		ctx.HTML(200, "test.html", nil)
+	})
 
 	//router.StaticFile("/", filepath.Join(staticDir, "template", "index.html"))
 

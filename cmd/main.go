@@ -11,6 +11,8 @@ import (
 
 func main() {
 
+	log.SetOutput(log.Writer())
+
 	if err := godotenv.Load(); err != nil {
 		log.Fatalf("Failed to load the env vars: %v", err)
 	}

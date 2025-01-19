@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Callui Tests</title>
+    <script src="../static/js/ui/callui.ts"></script>
+    <script>
+        // Mock CallManager class
+        class CallManager {
+            constructor(contactId) {
+                this.contactId = contactId;
+                this.localStream = null;
+                this.peerConnection = {
+                    getSenders: () => [{
+                        track: { kind: 'video' },
+                        replaceTrack: async () => {}
+                    }]
+                };
+            }
+
+            async startCall(type) {
+                // Mock media stream
+                this.localStream = new MediaStream();
+                const tracks = [
+                    { kind: 'audio', enabled: true },
+                    { kind: 'video', enabled: true }
+                ].map(track => ({
+                    ...track,
+                    stop: () => {},
+                    enabled: track.enabled
+                }));
+
+                tracks.forEach(track => this.localStream.addTrack(track));
+                return this.localStream;
+            }
+
+            async endCall() {
+                if (this.localStream) {
+                    this.localStream.getTracks().forEach(track => track.stop());
+                }
+            }
+        }
+
+        // Mock navigator.mediaDevices
+        navigator.mediaDevices = {
+            getDisplayMedia: async () => {
+                const stream = new MediaStream();
+                stream.addTrack({
+                    kind: 'video',
+                    stop: () => {},
+                    onended: null
+                });
+                return stream;
+            }
+        };
+
+        // Test initialization
+        const container = document.createElement('div');
+        document.body.appendChild(container);
+
+        const callUI = new CallUI(container, {
+            showTimer: true,
+            enableChat: true,
+            enableScreenShare: true
+        });
+
+        // Test cases
+        async function runTests() {
+            console.log('Starting CallUI tests...');
+
+            // Test 1: Initialize UI
+            console.log('Test 1: Testing UI initialization');
+            assert(container.querySelector('.call-container'), 'Call container should be created');
+            assert(container.querySelector('.toggle-audio'), 'Audio button should exist');
+            assert(container.querySelector('.toggle-video'), 'Video button should exist');
+            assert(container.querySelector('.toggle-screen-share'), 'Screen share button should exist');
+            assert(container.querySelector('.end-call'), 'End call button should exist');
+
+            // Test 2: Start video call
+            console.log('Test 2: Testing video call start');
+            await callUI.startVideoCall('test-contact-id');
+            assert(callUI.callManager, 'Call manager should be initialized');
+            assert(container.querySelector('.call-status').textContent.includes('progress'),
+                'Call status should indicate call is in progress');
+            assert(container.querySelector('.call-timer'), 'Timer should be visible');
+
+            // Test 3: Toggle controls
+            console.log('Test 3: Testing media controls');
+            callUI.toggleAudio();
+            const audioTrack = callUI.callManager.localStream.getAudioTracks()[0];
+            assert(!audioTrack.enabled, 'Audio should be muted');
+
+            callUI.toggleVideo();
+            const videoTrack = callUI.callManager.localStream.getVideoTracks()[0];
+            assert(!videoTrack.enabled, 'Video should be disabled');
+
+            // Test 4: Screen sharing
+            console.log('Test 4: Testing screen sharing');
+            await callUI.toggleScreenShare();
+            assert(callUI.screenStream, 'Screen sharing stream should be initialized');
+            assert(container.querySelector('.toggle-screen-share').classList.contains('btn-primary'),
+                'Screen share button should be highlighted');
+
+            // Test 5: End call
+            console.log('Test 5: Testing call end');
+            await callUI.endCall();
+            assert(!callUI.callManager, 'Call manager should be null after ending call');
+            assert(container.innerHTML === '', 'Container should be empty after ending call');
+
+            console.log('All tests completed successfully!');
+        }
+
+        // Simple assertion function
+        function assert(condition, message) {
+            if (!condition) {
+                throw new Error(message);
+            }
+        }
+
+        // Run tests
+        runTests().catch(error => {
+            console.error('Test failed:', error);
+        });
+
+    </script>
+</head>
+<body>
+<h1>Callui Tests</h1>
+<p>Check the console for test results</p>
+</body>
+</html>

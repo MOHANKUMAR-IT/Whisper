@@ -54,6 +54,7 @@ func Handler(auth *authenticator.Authenticator) gin.HandlerFunc {
 		// Save access token and profile to session
 		session.Set("access_token", token.AccessToken)
 		session.Set("profile", profile)
+
 		if err := session.Save(); err != nil {
 			ctx.String(http.StatusInternalServerError, "Failed to save session: "+err.Error())
 			return

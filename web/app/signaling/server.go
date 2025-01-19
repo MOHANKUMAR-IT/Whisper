@@ -20,9 +20,10 @@ type Message struct {
 }
 
 type Peer struct {
-	ID   string
-	Conn *websocket.Conn
-	mu   sync.Mutex // Mutex for connection writes
+	ID      string
+	NicName string
+	Conn    *websocket.Conn
+	mu      sync.Mutex // Mutex for connection writes
 }
 
 type Server struct {
@@ -58,6 +59,8 @@ func (s *Server) handleWebSocket(c *gin.Context) {
 		return
 	}
 
+	log.Printf("WebSocket connection established: %s", c.Request.URL)
+
 	peerID := c.Query("id")
 	if peerID == "" {
 		log.Println("Peer ID not provided")
@@ -65,7 +68,6 @@ func (s *Server) handleWebSocket(c *gin.Context) {
 		return
 	}
 
-	// Check if peer ID already exists
 	s.PeerMutex.RLock()
 	if _, exists := s.Peers[peerID]; exists {
 		s.PeerMutex.RUnlock()
@@ -75,16 +77,21 @@ func (s *Server) handleWebSocket(c *gin.Context) {
 	}
 	s.PeerMutex.RUnlock()
 
-	conn.SetReadLimit(4096)
-	conn.SetReadDeadline(time.Now().Add(60 * time.Second))
-	conn.SetPongHandler(func(string) error {
-		conn.SetReadDeadline(time.Now().Add(60 * time.Second))
-		return nil
-	})
+	conn.SetReadLimit(1024 * 1024 * 2)
+
+	log.Printf("Peer ID %s connected", c.Request.URL)
+
+	nicname := c.Query("nickname")
+	if nicname == "" {
+		log.Println("NicName not provided")
+		conn.Close()
+		return
+	}
 
 	peer := &Peer{
-		ID:   peerID,
-		Conn: conn,
+		ID:      peerID,
+		Conn:    conn,
+		NicName: nicname,
 	}
 
 	s.registerPeer(peer)
@@ -131,8 +138,9 @@ func (s *Server) broadcastPeerList(newPeer *Peer) {
 			newPeer.Conn.WriteJSON(Message{
 				Type: "contacts",
 				Data: map[string]string{
-					"peer":   id,
-					"action": "+",
+					"peer":    id,
+					"nicname": newPeer.NicName,
+					"action":  "+",
 				},
 			})
 		}
@@ -141,11 +149,13 @@ func (s *Server) broadcastPeerList(newPeer *Peer) {
 	// Notify existing peers about new peer
 	for _, peer := range s.Peers {
 		if peer.ID != newPeer.ID {
+			time.Sleep(100 * time.Millisecond)
 			peer.Conn.WriteJSON(Message{
 				Type: "contacts",
 				Data: map[string]string{
-					"peer":   newPeer.ID,
-					"action": "+",
+					"peer":    newPeer.ID,
+					"nicname": newPeer.NicName,
+					"action":  "+",
 				},
 			})
 		}
@@ -183,6 +193,16 @@ func (s *Server) handleMessages(peer *Peer) {
 				log.Printf("Error reading message from peer %s: %v", peer.ID, err)
 			}
 			break
+		}
+
+		if msg.Type == "candidate" {
+			log.Printf("Received ICE candidate from %s to %s", peer.ID, msg.Target)
+		}
+		if msg.Type == "offer" {
+			log.Printf("Received offer from %s to %s", peer.ID, msg.Target)
+		}
+		if msg.Type == "answer" {
+			log.Printf("Received answer from %s to %s", peer.ID, msg.Target)
 		}
 
 		if msg.Target == "" {

@@ -2,3 +2,4 @@
 cmd.exe
 Whisper.exe
 .env
+./node_modules
